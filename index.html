@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HyderAI</title>
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #45a049;
+            --text-color: #333;
+            --light-bg: #f5f5f5;
+            --white: #fff;
+            --gray: #ddd;
+            --dark-gray: #888;
+            --dark-bg: #1a1a1a;
+            --dark-text: #e6e6e6;
+            --dark-card: #2d2d2d;
+            --dark-border: #444;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--light-bg);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        body.dark-mode {
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+        }
+        
+        /* شريط التنقل */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--primary-color);
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: var(--white);
+        }
+        
+        .dark-mode .navbar {
+            background-color: #388E3C;
+        }
+        
+        .navbar-title {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        
+        .navbar-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .control-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+            font-size: 18px;
+        }
+        
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        
+        .dark-mode .control-btn {
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--dark-text);
+        }
+        
+        .dark-mode .control-btn:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .auth-buttons button {
+            margin-left: 10px;
+            padding: 8px 15px;
+            background-color: var(--white);
+            color: var(--primary-color);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .auth-buttons button:hover {
+            background-color: var(--light-bg);
+        }
+        
+        .dark-mode .auth-buttons button {
+            background-color: var(--dark-card);
+            color: var(--dark-text);
+        }
+        
+        .dark-mode .auth-buttons button:hover {
+            background-color: #3a3a3a;
+        }
+        
+        /* المحتوى الرئيسي */
+        .main-content {
+            display: flex;
+            gap: 20px;
+            flex-grow: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+            }
+        }
+        
+        /* القائمة الجانبية */
+        .sidebar {
+            width: 250px;
+            background-color: var(--white);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+        
+        .dark-mode .sidebar {
+            background-color: var(--dark-card);
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+        
+        .sidebar-section {
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid var(--gray);
+            color: var(--primary-color);
+            transition: border-color 0.3s, color 0.3s;
+        }
+        
+        .dark-mode .sidebar-title {
+            border-bottom-color: var(--dark-border);
+            color: #4CAF50;
+        }
+        
+        .recent-questions {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .recent-questions li {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--gray);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .dark-mode .recent-questions li {
+            border-bottom-color: var(--dark-border);
+        }
+        
+        .recent-questions li:hover {
+            color: var(--primary-color);
+            padding-right: 5px;
+        }
+        
+        .dark-mode .recent-questions li:hover {
+            color: #64dd17;
+        }
+        
+        /* منطقة الدردشة */
+        .chat-area {
+            flex-grow: 1;
+        }
+        
+        .chat-container {
+            background-color: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+        
+        .dark-mode .chat-container {
+            background-color: var(--dark-card);
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+        
+        .chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid var(--gray);
+            border-radius: 5px;
+            transition: border-color 0.3s;
+        }
+        
+        .dark-mode .chat-messages {
+            border-color: var(--dark-border);
+        }
+        
+        .message {
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 5px;
+            max-width: 70%;
+            word-wrap: break-word;
+            opacity: 0;
+            animation: fadeIn 0.3s forwards;
+        }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        
+        .user-message {
+            background-color: #e3f2fd;
+            margin-left: auto;
+            transition: background-color 0.3s;
+        }
+        
+        .dark-mode .user-message {
+            background-color: #2c3e50;
+        }
+        
+        .ai-message {
+            background-color: #f1f1f1;
+            margin-right: auto;
+            transition: background-color 0.3s;
+        }
+        
+        .dark-mode .ai-message {
+            background-color: #37474f;
+        }
+        
+        .input-area {
+            display: flex;
+            gap: 10px;
+        }
+        
+        #user-input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid var(--gray);
+            border-radius: 5px;
+            transition: border 0.3s, background-color 0.3s, color 0.3s;
+        }
+        
+        .dark-mode #user-input {
+            background-color: #333;
+            color: var(--dark-text);
+            border-color: var(--dark-border);
+        }
+        
+        #user-input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+        
+        .dark-mode #user-input:focus {
+            border-color: #64dd17;
+        }
+        
+        button {
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .dark-mode button {
+            background-color: #388E3C;
+        }
+        
+        .dark-mode button:hover {
+            background-color: #2E7D32;
+        }
+        
+        button:disabled {
+            background-color: var(--gray);
+            cursor: not-allowed;
+        }
+        
+        .dark-mode button:disabled {
+            background-color: #555;
+        }
+        
+        .typing-indicator {
+            display: inline-block;
+            padding: 8px 12px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            margin-right: auto;
+            transition: background-color 0.3s;
+        }
+        
+        .dark-mode .typing-indicator {
+            background-color: #37474f;
+        }
+        
+        .typing-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--dark-gray);
+            margin: 0 2px;
+            animation: typingAnimation 1.4s infinite ease-in-out;
+        }
+        
+        .dark-mode .typing-dot {
+            background-color: #aaa;
+        }
+        
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes typingAnimation {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+        
+        /* نماذج التسجيل والدخول */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background-color: var(--white);
+            padding: 30px;
+            border-radius: 10px;
+            width: 350px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            position: relative;
+            transition: background-color 0.3s;
+        }
+        
+        .dark-mode .modal-content {
+            background-color: var(--dark-card);
+        }
+        
+        .modal-content h2 {
+            margin-top: 0;
+            color: var(--primary-color);
+            text-align: center;
+        }
+        
+        .dark-mode .modal-content h2 {
+            color: #64dd17;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        
+        .dark-mode .form-group label {
+            color: var(--dark-text);
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--gray);
+            border-radius: 5px;
+            box-sizing: border-box;
+            transition: border 0.3s, background-color 0.3s, color 0.3s;
+        }
+        
+        .dark-mode .form-group input {
+            background-color: #333;
+            color: var(--dark-text);
+            border-color: var(--dark-border);
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--dark-gray);
+            transition: color 0.3s;
+        }
+        
+        .dark-mode .close-btn {
+            color: #aaa;
+        }
+        
+        .error-message {
+            color: #f44336;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        /* تأثيرات للرسائل */
+        @keyframes typewriter {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        
+        .typewriter-effect {
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typewriter 3s steps(40) 1s 1 normal both;
+        }
+        
+        .ai-disabled-message {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+        
+        .dark-mode .ai-disabled-message {
+            background-color: #4e342e;
+            color: #ff8a65;
+        }
+    </style>
+</head>
+<body>
+    <!-- شريط التنقل -->
+    <div class="navbar">
+        <div class="navbar-title">HyderAI</div>
+        <div class="navbar-controls">
+            <div class="auth-buttons">
+                <button id="auth-btn">تسجيل الدخول</button>
+            </div>
+            <button class="control-btn" id="ai-toggle" title="إيقاف الذكاء الاصطناعي">❌</button>
+            <button class="control-btn" id="dark-mode-toggle" title="الوضع الداكن">🌙</button>
+        </div>
+    </div>
+    
+    <!-- المحتوى الرئيسي -->
+    <div class="main-content">
+        <!-- القائمة الجانبية -->
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">آخر الأسئلة</div>
+                <ul class="recent-questions" id="recent-questions">
+                    <!-- يتم ملؤها بالأسئلة السابقة -->
+                </ul>
+            </div>
+            
+            <div class="sidebar-section" id="user-section" style="display: none;">
+                <div class="sidebar-title">حسابك</div>
+                <div id="user-info"></div>
+                <button id="logout-btn" style="width: 100%; margin-top: 10px;">تسجيل الخروج</button>
+            </div>
+        </div>
+        
+        <!-- منطقة الدردشة -->
+        <div class="chat-area">
+            <div class="chat-container">
+                <div class="chat-messages" id="chat-messages">
+                    <div class="message ai-message">مرحباً! أنا مساعد HyderAI. كيف يمكنني مساعدتك اليوم؟</div>
+                </div>
+                
+                <div class="input-area">
+                    <input type="text" id="user-input" placeholder="اكتب رسالتك هنا..." autocomplete="off">
+                    <button id="send-button">إرسال</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- نموذج تسجيل الدخول -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content">
+            <span class="close-btn" id="close-login">&times;</span>
+            <h2>تسجيل الدخول</h2>
+            <div class="form-group">
+                <label for="login-email">البريد الإلكتروني</label>
+                <input type="email" id="login-email" placeholder="أدخل بريدك الإلكتروني">
+                <div class="error-message" id="login-email-error"></div>
+            </div>
+            <div class="form-group">
+                <label for="login-password">كلمة المرور</label>
+                <input type="password" id="login-password" placeholder="أدخل كلمة المرور">
+                <div class="error-message" id="login-password-error"></div>
+            </div>
+            <div class="form-actions">
+                <button type="button" id="submit-login">تسجيل الدخول</button>
+                <button type="button" id="show-register">إنشاء حساب</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- نموذج إنشاء حساب -->
+    <div class="modal" id="register-modal">
+        <div class="modal-content">
+            <span class="close-btn" id="close-register">&times;</span>
+            <h2>إنشاء حساب جديد</h2>
+            <div class="form-group">
+                <label for="register-name">الاسم الكامل</label>
+                <input type="text" id="register-name" placeholder="أدخل اسمك الكامل">
+                <div class="error-message" id="register-name-error"></div>
+            </div>
+            <div class="form-group">
+                <label for="register-email">البريد الإلكتروني</label>
+                <input type="email" id="register-email" placeholder="أدخل بريدك الإلكتروني">
+                <div class="error-message" id="register-email-error"></div>
+            </div>
+            <div class="form-group">
+                <label for="register-password">كلمة المرور</label>
+                <input type="password" id="register-password" placeholder="أدخل كلمة المرور (6 أحرف على الأقل)">
+                <div class="error-message" id="register-password-error"></div>
+            </div>
+            <div class="form-group">
+                <label for="register-confirm">تأكيد كلمة المرور</label>
+                <input type="password" id="register-confirm" placeholder="أعد إدخال كلمة المرور">
+                <div class="error-message" id="register-confirm-error"></div>
+            </div>
+            <div class="form-actions">
+                <button type="button" id="submit-register">إنشاء حساب</button>
+                <button type="button" id="show-login">لديك حساب؟ سجل دخول</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // ========== متغيرات التطبيق ==========
+        let recentQuestions = [];
+        let currentUser = null;
+        let isTyping = false;
+        let aiEnabled = true;
+        let darkModeEnabled = false;
+        
+        // ========== عناصر DOM ==========
+        // شريط التنقل
+        const authBtn = document.getElementById('auth-btn');
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const aiToggle = document.getElementById('ai-toggle');
+        
+        // منطقة الدردشة
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+        const chatMessages = document.getElementById('chat-messages');
+        
+        // القائمة الجانبية
+        const recentQuestionsList = document.getElementById('recent-questions');
+        const userSection = document.getElementById('user-section');
+        const userInfo = document.getElementById('user-info');
+        const logoutBtn = document.getElementById('logout-btn');
+        
+        // نماذج التسجيل والدخول
+        const loginModal = document.getElementById('login-modal');
+        const registerModal = document.getElementById('register-modal');
+        const closeLogin = document.getElementById('close-login');
+        const closeRegister = document.getElementById('close-register');
+        const submitLogin = document.getElementById('submit-login');
+        const submitRegister = document.getElementById('submit-register');
+        const showRegister = document.getElementById('show-register');
+        const showLogin = document.getElementById('show-login');
+        
+        // ========== تهيئة التطبيق ==========
+        document.addEventListener('DOMContentLoaded', () => {
+            // تحميل البيانات المحفوظة
+            loadSavedData();
+            
+            // تحديث واجهة المستخدم حسب حالة التسجيل
+            updateAuthUI();
+            
+            // تطبيق وضع الدارك مود إذا كان مفعلاً
+            applyDarkMode();
+            
+            // تحديث حالة الذكاء الاصطناعي
+            updateAiStatus();
+            
+            // التركيز على حقل الإدخال
+            userInput.focus();
+        });
+        
+        // ========== إدارة الدارك مود ==========
+        // تبديل وضع الدارك مود
+        function toggleDarkMode() {
+            darkModeEnabled = !darkModeEnabled;
+            document.body.classList.toggle('dark-mode', darkModeEnabled);
+            darkModeToggle.textContent = darkModeEnabled ? '☀️' : '🌙';
+            localStorage.setItem('ai_dark_mode', darkModeEnabled);
+        }
+        
+        // تطبيق وضع الدارك مود
+        function applyDarkMode() {
+            if (darkModeEnabled) {
+                document.body.classList.add('dark-mode');
+                darkModeToggle.textContent = '☀️';
+            } else {
+                document.body.classList.remove('dark-mode');
+                darkModeToggle.textContent = '🌙';
+            }
+        }
+        
+        // ========== إدارة الذكاء الاصطناعي ==========
+        // تبديل حالة الذكاء الاصطناعي
+        function toggleAiStatus() {
+            aiEnabled = !aiEnabled;
+            localStorage.setItem('ai_enabled', aiEnabled);
+            updateAiStatus();
+            
+            if (!aiEnabled) {
+                addMessage('ai', 'تم إيقاف الذكاء الاصطناعي. لن يتم إرسال أسئلتك إلى الخادم.', true);
+            }
+        }
+        
+        // تحديث واجهة حالة الذكاء الاصطناعي
+        function updateAiStatus() {
+            aiToggle.textContent = aiEnabled ? '❌' : '✅';
+            aiToggle.title = aiEnabled ? 'إيقاف الذكاء الاصطناعي' : 'تفعيل الذكاء الاصطناعي';
+            
+            // تحديث نص الزر حسب الحالة
+            aiToggle.setAttribute('aria-label', aiEnabled ? 
+                'إيقاف الذكاء الاصطناعي' : 'تفعيل الذكاء الاصطناعي');
+        }
+        
+        // ========== إدارة التسجيل والدخول ==========
+        // تحميل البيانات المحفوظة
+        function loadSavedData() {
+            const savedUser = localStorage.getItem('ai_chat_user');
+            const savedQuestions = localStorage.getItem('ai_recent_questions');
+            const savedDarkMode = localStorage.getItem('ai_dark_mode');
+            const savedAiEnabled = localStorage.getItem('ai_enabled');
+            
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+            }
+            
+            if (savedQuestions) {
+                recentQuestions = JSON.parse(savedQuestions);
+                updateRecentQuestionsUI();
+            }
+            
+            if (savedDarkMode) {
+                darkModeEnabled = savedDarkMode === 'true';
+            }
+            
+            if (savedAiEnabled) {
+                aiEnabled = savedAiEnabled === 'true';
+            }
+        }
+        
+        // حفظ البيانات
+        function saveData() {
+            if (currentUser) {
+                localStorage.setItem('ai_chat_user', JSON.stringify(currentUser));
+            }
+            localStorage.setItem('ai_recent_questions', JSON.stringify(recentQuestions));
+        }
+        
+        // تحديث واجهة المستخدم حسب حالة التسجيل
+        function updateAuthUI() {
+            if (currentUser) {
+                authBtn.textContent = currentUser.name;
+                userSection.style.display = 'block';
+                userInfo.innerHTML = `
+                    <p><strong>الاسم:</strong> ${currentUser.name}</p>
+                    <p><strong>البريد:</strong> ${currentUser.email}</p>
+                `;
+            } else {
+                authBtn.textContent = 'تسجيل الدخول';
+                userSection.style.display = 'none';
+            }
+        }
+        
+        // تسجيل الدخول
+        function loginUser(email, password) {
+            // في تطبيق حقيقي، هنا نتحقق من الخادم
+            const users = JSON.parse(localStorage.getItem('ai_chat_users') || '[]');
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                currentUser = user;
+                saveData();
+                updateAuthUI();
+                hideModal(loginModal);
+                showMessage('success', 'تم تسجيل الدخول بنجاح!');
+                return true;
+            }
+            
+            showError('login-password-error', 'البريد الإلكتروني أو كلمة المرور غير صحيحة');
+            return false;
+        }
+        
+        // تسجيل حساب جديد
+        function registerUser(name, email, password) {
+            // التحقق من صحة البيانات
+            if (!name || name.length < 3) {
+                showError('register-name-error', 'الاسم يجب أن يكون 3 أحرف على الأقل');
+                return false;
+            }
+            
+            if (!validateEmail(email)) {
+                showError('register-email-error', 'البريد الإلكتروني غير صحيح');
+                return false;
+            }
+            
+            if (!password || password.length < 6) {
+                showError('register-password-error', 'كلمة المرور يجب أن تكون 6 أحرف على الأقل');
+                return false;
+            }
+            
+            // التحقق من عدم وجود حساب بنفس البريد
+            const users = JSON.parse(localStorage.getItem('ai_chat_users') || '[]');
+            if (users.some(u => u.email === email)) {
+                showError('register-email-error', 'هذا البريد الإلكتروني مستخدم بالفعل');
+                return false;
+            }
+            
+            // إنشاء حساب جديد
+            const newUser = { name, email, password };
+            users.push(newUser);
+            localStorage.setItem('ai_chat_users', JSON.stringify(users));
+            
+            currentUser = newUser;
+            saveData();
+            updateAuthUI();
+            hideModal(registerModal);
+            showMessage('success', 'تم إنشاء الحساب بنجاح!');
+            return true;
+        }
+        
+        // تسجيل الخروج
+        function logoutUser() {
+            currentUser = null;
+            saveData();
+            updateAuthUI();
+            showMessage('info', 'تم تسجيل الخروج بنجاح');
+        }
+        
+        // ========== إدارة الدردشة ==========
+        // إضافة رسالة إلى الدردشة
+        function addMessage(sender, message, instant = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.classList.add(sender + '-message');
+            
+            if (typeof message === 'string') {
+                if (instant || sender === 'user') {
+                    messageDiv.textContent = message;
+                    messageDiv.style.opacity = 1;
+                } else {
+                    // عرض الرسالة حرفًا بحرف
+                    typewriterEffect(messageDiv, message);
+                }
+            } else {
+                messageDiv.appendChild(message);
+                messageDiv.style.opacity = 1;
+            }
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            return messageDiv;
+        }
+        
+        // تأثير الكتابة الآلية
+        function typewriterEffect(element, text, speed = 20) {
+            let i = 0;
+            element.textContent = '';
+            element.style.opacity = 1;
+            
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+            }
+            
+            type();
+        }
+        
+        // عرض مؤشر الكتابة
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.classList.add('typing-indicator');
+            
+            for (let i = 0; i < 3; i++) {
+                const dot = document.createElement('span');
+                dot.classList.add('typing-dot');
+                typingDiv.appendChild(dot);
+            }
+            
+            addMessage('ai', typingDiv, true);
+            return typingDiv;
+        }
+        
+        // إخفاء مؤشر الكتابة
+        function hideTypingIndicator(indicator) {
+            indicator.remove();
+        }
+        
+        // الحصول على رد الذكاء الاصطناعي
+        async function getAIResponse(userMessage) {
+            // إضافة السؤال إلى المحفوظات
+            addToRecentQuestions(userMessage);
+            
+            const url = "https://backend.hyder.ai/query";
+            const payload = {
+                query: userMessage,
+                source_id: 7,
+                mode: "c"
+            };
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'User-Agent': 'Mozilla/5.0 (Linux; Android 11; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36',
+                        'Accept': 'application/json, text/plain, */*',
+                        'origin': 'https://www.hyder.ai',
+                        'x-requested-with': 'mark.via.gp',
+                        'sec-fetch-site': 'same-site',
+                        'sec-fetch-mode': 'cors',
+                        'sec-fetch-dest': 'empty',
+                        'referer': 'https://www.hyder.ai/',
+                        'accept-language': 'ar-DZ,ar;q=0.9,en-US;q=0.8,en;q=0.7,ar-AE;q=0.6,en-AU;q=0.5',
+                        'priority': 'u=1, i'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Request failed with status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                return data.response || "عذراً، لم أتمكن من الحصول على رد. يرجى المحاولة مرة أخرى.";
+            } catch (error) {
+                console.error('Error fetching AI response:', error);
+                return "حدث خطأ أثناء الاتصال بالخادم. يرجى المحاولة مرة أخرى لاحقاً.";
+            }
+        }
+        
+        // إضافة سؤال إلى القائمة الأخيرة
+        function addToRecentQuestions(question) {
+            recentQuestions.unshift(question);
+            if (recentQuestions.length > 10) {
+                recentQuestions.pop();
+            }
+            
+            updateRecentQuestionsUI();
+            saveData();
+        }
+        
+        // تحديث واجهة الأسئلة الأخيرة
+        function updateRecentQuestionsUI() {
+            recentQuestionsList.innerHTML = '';
+            recentQuestions.forEach(question => {
+                const li = document.createElement('li');
+                li.textContent = question;
+                li.addEventListener('click', () => {
+                    userInput.value = question;
+                    userInput.focus();
+                });
+                recentQuestionsList.appendChild(li);
+            });
+        }
+        
+        // إرسال رسالة
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            
+            if (message && !isTyping) {
+                isTyping = true;
+                addMessage('user', message, true);
+                userInput.value = '';
+                userInput.disabled = true;
+                sendButton.disabled = true;
+                
+                if (!aiEnabled) {
+                    // الذكاء الاصطناعي معطل
+                    setTimeout(() => {
+                        const response = "الذكاء الاصطناعي معطل حاليًا. قم بتفعيله للرد على أسئلتك.";
+                        addMessage('ai', response);
+                        userInput.disabled = false;
+                        sendButton.disabled = false;
+                        userInput.focus();
+                        isTyping = false;
+                    }, 1000);
+                    return;
+                }
+                
+                const typingIndicator = showTypingIndicator();
+                
+                try {
+                    const aiResponse = await getAIResponse(message);
+                    hideTypingIndicator(typingIndicator);
+                    addMessage('ai', aiResponse);
+                } catch (error) {
+                    hideTypingIndicator(typingIndicator);
+                    addMessage('ai', "حدث خطأ أثناء معالجة طلبك. يرجى المحاولة مرة أخرى.", true);
+                }
+                
+                userInput.disabled = false;
+                sendButton.disabled = false;
+                userInput.focus();
+                isTyping = false;
+            }
+        }
+        
+        // ========== دوال مساعدة ==========
+        // التحقق من صحة البريد الإلكتروني
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+        
+        // عرض رسالة خطأ
+        function showError(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.style.display = 'block';
+        }
+        
+        // إخفاء جميع أخطاء النماذج
+        function clearErrors() {
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.style.display = 'none';
+            });
+        }
+        
+        // عرض رسالة للمستخدم
+        function showMessage(type, text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', type + '-message');
+            messageDiv.textContent = text;
+            messageDiv.style.opacity = 1;
+            messageDiv.style.margin = '10px auto';
+            messageDiv.style.maxWidth = '100%';
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 5000);
+        }
+        
+        // إظهار/إخفاء النماذج
+        function showModal(modal) {
+            clearErrors();
+            modal.style.display = 'flex';
+        }
+        
+        function hideModal(modal) {
+            modal.style.display = 'none';
+        }
+        
+        // ========== أحداث DOM ==========
+        // أحداث الأزرار الجديدة
+        darkModeToggle.addEventListener('click', toggleDarkMode);
+        aiToggle.addEventListener('click', toggleAiStatus);
+        
+        // أحداث التسجيل والدخول
+        authBtn.addEventListener('click', () => {
+            if (currentUser) return;
+            showModal(loginModal);
+        });
+        
+        closeLogin.addEventListener('click', () => hideModal(loginModal));
+        closeRegister.addEventListener('click', () => hideModal(registerModal));
+        
+        showRegister.addEventListener('click', () => {
+            hideModal(loginModal);
+            showModal(registerModal);
+        });
+        
+        showLogin.addEventListener('click', () => {
+            hideModal(registerModal);
+            showModal(loginModal);
+        });
+        
+        submitLogin.addEventListener('click', () => {
+            clearErrors();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            if (!email) {
+                showError('login-email-error', 'الرجاء إدخال البريد الإلكتروني');
+                return;
+            }
+            
+            if (!password) {
+                showError('login-password-error', 'الرجاء إدخال كلمة المرور');
+                return;
+            }
+            
+            loginUser(email, password);
+        });
+        
+        submitRegister.addEventListener('click', () => {
+            clearErrors();
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const confirm = document.getElementById('register-confirm').value;
+            
+            if (password !== confirm) {
+                showError('register-confirm-error', 'كلمة المرور غير متطابقة');
+                return;
+            }
+            
+            registerUser(name, email, password);
+        });
+        
+        logoutBtn.addEventListener('click', logoutUser);
+        
+        // أحداث الدردشة
+        sendButton.addEventListener('click', sendMessage);
+        
+        userInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        // إغلاق النماذج بالنقر خارجها
+        window.addEventListener('click', (e) => {
+            if (e.target === loginModal) hideModal(loginModal);
+            if (e.target === registerModal) hideModal(registerModal);
+        });
+    </script>
+</body>
+</html>
